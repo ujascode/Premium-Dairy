@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 
-console.log('MIDDLEWARE LOADED - THIS SHOULD APPEAR ON EVERY REQUEST');
-
 /**
  * Middleware to protect routes using JWT authentication with role-based access control.
  *
@@ -20,8 +18,6 @@ console.log('MIDDLEWARE LOADED - THIS SHOULD APPEAR ON EVERY REQUEST');
  * - Clears invalid/expired tokens or tokens with invalid payload and redirects to /login
  */
 export async function middleware(request) {
-  console.log('MIDDLEWARE EXECUTING FOR PATH:', request.nextUrl.pathname);
-
   // Get token from cookies
   const token = request.cookies.get('token')?.value;
 
@@ -45,26 +41,21 @@ export async function middleware(request) {
 
   // If the path is public, allow access without authentication
   if (isPublicPath) {
-    console.log('ALLOWING PUBLIC PATH:', pathname);
     return NextResponse.next();
   }
 
   // If the path is protected, check for authentication
   if (isProtectedPath) {
-    console.log('CHECKING AUTH FOR PROTECTED PATH:', pathname);
     // If no token exists, redirect to login page
     if (!token) {
-      console.log('NO TOKEN FOUND, REDIRECTING TO LOGIN');
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       return NextResponse.redirect(url);
     }
 
-    console.log('TOKEN FOUND, ATTEMPTING VERIFICATION');
     // Verify the JWT token using utility function
     try {
       const decoded = verifyToken(token);
-      console.log('TOKEN VERIFIED SUCCESSFULLY:', decoded);
 
       // Validate payload contains required fields and role is admin
       if (
@@ -73,26 +64,20 @@ export async function middleware(request) {
         typeof decoded.role !== 'string' ||
         decoded.role !== 'admin'
       ) {
-        console.log('INVALID TOKEN PAYLOAD');
         throw new Error('Invalid token payload');
       }
 
-      console.log('TOKEN PAYLOAD VALIDATION PASSED');
-
       // If user is authenticated and trying to access login page, redirect to dashboard
       if (pathname === '/login') {
-        console.log('AUTHENTICATED USER ACCESSING LOGIN, REDIRECTING TO DASHBOARD');
         const url = request.nextUrl.clone();
         url.pathname = '/dashboard';
         return NextResponse.redirect(url);
       }
 
       // Token is valid and payload is correct, allow access to protected route
-      console.log('ACCESS GRANTED TO PROTECTED PATH:', pathname);
       return NextResponse.next();
     } catch (err) {
       // Token is invalid, expired, or payload validation failed
-      console.log('TOKEN VERIFICATION FAILED:', err.message);
       // Clear the token cookie and redirect to login
       const response = NextResponse.redirect(new URL('/login', request.url));
       response.cookies.set('token', '', {
@@ -107,7 +92,6 @@ export async function middleware(request) {
   }
 
   // For all other paths, allow access
-  console.log('ALLOWING ACCESS TO OTHER PATH:', pathname);
   return NextResponse.next();
 }
 
