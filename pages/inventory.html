@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/tables.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Inventory</span>
+            </div>
+            <h1 class="text-h2">Inventory Control</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline" onclick="window.print()"><i class="ph ph-printer"></i> Print Stock Report</button>
+            <button class="btn btn-brand ripple"><i class="ph ph-arrows-down-up"></i> Stock Transfer</button>
+          </div>
+        </div>
+
+        <!-- Inventory Alerts -->
+        <div id="inventory-alerts" class="mb-6 flex flex-col gap-4 animate-slide-up">
+          <!-- Injected via JS -->
+        </div>
+
+        <div class="card full-width-card animate-slide-up" style="animation-delay: 0.1s">
+          <div class="card-header flex-wrap gap-4">
+            <div class="search-container" style="width: 350px;">
+              <i class="ph ph-magnifying-glass input-icon text-lg" style="left: 1rem"></i>
+              <input type="text" class="search-input" id="search-inventory" placeholder="Search products...">
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <label class="form-check m-0 mr-4">
+                <input type="checkbox" id="filter-low-stock" class="form-check-input">
+                <span class="form-check-label text-sm">Low Stock Only</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table" id="inventory-table">
+              <thead>
+                <tr>
+                  <th>Product Details</th>
+                  <th>SKU</th>
+                  <th>Current Stock</th>
+                  <th>Status</th>
+                  <th>Quick Action</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-tbody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initInventory, 50);
+    });
+    
+    let allProducts = [];
+    
+    function initInventory() {
+      allProducts = Storage.getProducts();
+      renderInventoryTable(allProducts);
+      renderAlerts();
+      
+      document.getElementById('search-inventory').addEventListener('input', filterInventory);
+      document.getElementById('filter-low-stock').addEventListener('change', filterInventory);
+    }
+    
+    function filterInventory() {
+      const term = document.getElementById('search-inventory').value.toLowerCase();
+      const onlyLow = document.getElementById('filter-low-stock').checked;
+      
+      const filtered = allProducts.filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(term) || p.sku.toLowerCase().includes(term);
+        const matchLow = !onlyLow || p.stock < 20;
+        return matchSearch && matchLow;
+      });
+      
+      renderInventoryTable(filtered);
+    }
+    
+    function renderInventoryTable(products) {
+      const tbody = document.getElementById('inventory-tbody');
+      tbody.innerHTML = products.map(p => {
+        let statusBadge = 'badge-success';
+        if (p.stock === 0) statusBadge = 'badge-danger';
+        else if (p.stock < 20) statusBadge = 'badge-warning';
+        
+        let stockClass = '';
+        if (p.stock === 0) stockClass = 'text-danger font-bold';
+        else if (p.stock < 20) stockClass = 'text-warning font-bold';
+        
+        return `
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar avatar-sm bg-surface text-secondary border"><i class="ph ph-package"></i></div>
+                <div>
+                  <div class="font-medium">${p.name}</div>
+                  <div class="text-xs text-secondary">${p.category}</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm font-mono text-secondary">${p.sku}</td>
+            <td class="text-lg ${stockClass}">${p.stock}</td>
+            <td><span class="badge ${statusBadge}">${p.status}</span></td>
+            <td>
+              <div class="flex items-center gap-2">
+                <input type="number" id="restock-${p.id}" class="form-control" style="width: 80px; padding: 0.25rem 0.5rem;" min="1" placeholder="Qty">
+                <button class="btn btn-outline btn-sm" onclick="quickRestock('${p.id}')">Restock</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    function quickRestock(id) {
+      const qtyInput = document.getElementById(`restock-${id}`);
+      const qty = parseInt(qtyInput.value, 10);
+      
+      if (!qty || qty <= 0) {
+        Utils.showToast('Invalid Quantity', 'Please enter a valid number to restock.', 'error');
+        return;
+      }
+      
+      const product = allProducts.find(p => p.id === id);
+      const newStock = product.stock + qty;
+      let newStatus = 'In Stock';
+      if (newStock < 20) newStatus = 'Low Stock';
+      
+      Storage.updateProduct(id, { stock: newStock, status: newStatus });
+      Utils.showToast('Stock Updated', `Added ${qty} units to ${product.name}.`, 'success');
+      
+      qtyInput.value = '';
+      
+      // Refresh
+      allProducts = Storage.getProducts();
+      filterInventory();
+      renderAlerts();
+      App.updateNotificationsBadge();
+    }
+    
+    function renderAlerts() {
+      const alertsDiv = document.getElementById('inventory-alerts');
+      const outOfStock = allProducts.filter(p => p.stock === 0);
+      
+      let html = '';
+      if (outOfStock.length > 0) {
+        html += `
+          <div class="bg-danger text-white p-4 rounded-lg flex items-start gap-4">
+            <i class="ph ph-warning-circle text-2xl mt-1"></i>
+            <div>
+              <h4 class="font-bold text-lg">Immediate Restock Required</h4>
+              <p class="opacity-90 mt-1">${outOfStock.length} product(s) are completely out of stock and cannot be sold.</p>
+            </div>
+          </div>
+        `;
+      }
+      alertsDiv.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

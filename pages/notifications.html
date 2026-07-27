@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1 class="text-h2">Notifications</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline" onclick="markAllRead()"><i class="ph ph-check-circle"></i> Mark All as Read</button>
+          </div>
+        </div>
+
+        <div class="card full-width-card animate-slide-up">
+          <div class="card-body p-0" id="notifications-list">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(renderNotifications, 50);
+    });
+    
+    function renderNotifications() {
+      const notifs = Storage.getNotifications();
+      const container = document.getElementById('notifications-list');
+      
+      if (notifs.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 4rem;">
+            <div class="empty-state-icon"><i class="ph ph-bell-slash"></i></div>
+            <h3>No notifications</h3>
+            <p class="text-secondary">You're all caught up!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = notifs.map(n => {
+        let icon = 'ph-bell';
+        let bgClass = 'bg-surface';
+        let textClass = 'text-primary';
+        
+        if (n.type === 'warning') { icon = 'ph-warning'; bgClass = 'bg-warning-light'; textClass = 'text-warning'; }
+        if (n.type === 'success') { icon = 'ph-check-circle'; bgClass = 'bg-success-light'; textClass = 'text-success'; }
+        
+        return `
+          <div class="flex p-4 border-b hover:bg-surface transition cursor-pointer ${n.read ? 'opacity-70' : ''}" onclick="markRead(${n.id})">
+            <div class="avatar avatar-sm ${bgClass} ${textClass} mr-4"><i class="ph ${icon}"></i></div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <h4 class="font-bold ${!n.read ? 'text-brand' : ''}">${n.title}</h4>
+                <span class="text-xs text-secondary">${n.time}</span>
+              </div>
+              <p class="text-sm text-secondary mt-1">${n.message}</p>
+            </div>
+            ${!n.read ? '<div class="ml-4 flex items-center"><div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-brand);"></div></div>' : ''}
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function markRead(id) {
+      Storage.markNotificationRead(id);
+      renderNotifications();
+      App.updateNotificationsBadge();
+    }
+    
+    function markAllRead() {
+      const db = Storage.getDb();
+      db.notifications.forEach(n => n.read = true);
+      Storage.saveDb(db);
+      renderNotifications();
+      App.updateNotificationsBadge();
+      Utils.showToast('Cleared', 'All notifications marked as read', 'success');
+    }
+  </script>
+</body>
+</html>

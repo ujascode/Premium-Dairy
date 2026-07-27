@@ -1,0 +1,146 @@
+/* ==========================================================================
+   Responsive CSS - Media Queries for all devices
+   ========================================================================== */
+
+/* Laptop / Small Desktop (max-width: 1200px) */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    grid-column: span 6;
+  }
+  
+  .chart-card {
+    grid-column: span 12;
+  }
+  
+  .list-card {
+    grid-column: span 12;
+  }
+}
+
+/* Tablet (max-width: 992px) */
+@media (max-width: 992px) {
+  /* Sidebar handling */
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+  }
+  
+  .sidebar.mobile-open + .sidebar-overlay {
+    display: block;
+  }
+  
+  /* Layout adjustments */
+  .page-content {
+    padding: 1.5rem;
+  }
+  
+  .auth-container {
+    margin: 1.5rem;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+  
+  .stat-card {
+    grid-column: span 12;
+  }
+  
+  .search-container {
+    display: none; /* Hide global search on mobile to save space */
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .page-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .page-actions .btn {
+    flex: 1;
+  }
+  
+  /* Tables */
+  .table-responsive {
+    border-radius: 0;
+    margin: 0 -1.5rem;
+    width: calc(100% + 3rem);
+  }
+  
+  .table th, .table td {
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Modals */
+  .modal {
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    transform: translateY(100%);
+  }
+  
+  .modal-overlay.active .modal {
+    transform: translateY(0);
+  }
+  
+  .modal-body {
+    flex: 1;
+  }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .page-content {
+    padding: 1rem;
+  }
+  
+  .card-header, .card-body, .card-footer {
+    padding: 1rem;
+  }
+  
+  .toast-container {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .toast {
+    width: 100%;
+  }
+  
+  .profile-name, .profile-role {
+    display: none;
+  }
+  
+  .profile-menu {
+    padding: 0;
+  }
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> 
+              <a href="products.html">Products</a> <span class="breadcrumb-separator">/</span> 
+              <span class="breadcrumb-current">Add New</span>
+            </div>
+            <h1 class="text-h2">Add New Product</h1>
+          </div>
+          <div class="page-actions">
+            <a href="products.html" class="btn btn-outline"><i class="ph ph-x"></i> Cancel</a>
+            <button class="btn btn-primary ripple" form="add-product-form"><i class="ph ph-floppy-disk"></i> Save Product</button>
+          </div>
+        </div>
+
+        <form id="add-product-form" class="dashboard-grid animate-slide-up">
+          
+          <div class="card" style="grid-column: span 8;">
+            <div class="card-header">
+              <h3 class="card-title">Basic Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Product Name <span class="required">*</span></label>
+                <input type="text" id="p-name" class="form-control" placeholder="e.g. Organic Almond Milk" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea id="p-desc" class="form-control" placeholder="Brief description of the product..."></textarea>
+              </div>
+              
+              <div class="flex gap-4">
+                <div class="form-group flex-1">
+                  <label class="form-label">Category <span class="required">*</span></label>
+                  <select id="p-cat" class="form-control" required>
+                    <!-- Injected by JS -->
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label class="form-label">SKU (Stock Keeping Unit) <span class="required">*</span></label>
+                  <input type="text" id="p-sku" class="form-control" placeholder="e.g. MILK-001" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-6" style="grid-column: span 4;">
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Pricing</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Selling Price <span class="required">*</span></label>
+                  <div class="input-icon-wrapper">
+                    <i class="ph ph-currency-inr input-icon"></i>
+                    <input type="number" id="p-price" class="form-control" min="0" step="0.01" required>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-0">
+                  <label class="form-label">Cost Price <span class="required">*</span></label>
+                  <div class="input-icon-wrapper">
+                    <i class="ph ph-currency-inr input-icon"></i>
+                    <input type="number" id="p-cost" class="form-control" min="0" step="0.01" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Inventory</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group mb-0">
+                  <label class="form-label">Initial Stock Quantity <span class="required">*</span></label>
+                  <input type="number" id="p-stock" class="form-control" min="0" value="0" required>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const catSelect = document.getElementById('p-cat');
+      const categories = Storage.getCategories();
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        catSelect.appendChild(opt);
+      });
+      
+      document.getElementById('add-product-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const price = parseFloat(document.getElementById('p-price').value);
+        const stock = parseInt(document.getElementById('p-stock').value, 10);
+        
+        const newProd = {
+          name: document.getElementById('p-name').value,
+          category: document.getElementById('p-cat').value,
+          sku: document.getElementById('p-sku').value,
+          price: price,
+          cost: parseFloat(document.getElementById('p-cost').value),
+          stock: stock,
+          status: stock === 0 ? 'Out of Stock' : (stock < 20 ? 'Low Stock' : 'In Stock')
+        };
+        
+        Storage.addProduct(newProd);
+        Utils.showToast('Success', 'Product added successfully!', 'success');
+        
+        setTimeout(() => {
+          window.location.href = 'products.html';
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>

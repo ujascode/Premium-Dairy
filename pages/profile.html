@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1 class="text-h2">My Profile</h1>
+          </div>
+          <div class="page-actions">
+            <a href="login.html" class="btn btn-outline text-danger hover:bg-danger-light hover:border-danger hover:text-danger"><i class="ph ph-sign-out"></i> Log Out</a>
+          </div>
+        </div>
+
+        <div class="dashboard-grid animate-slide-up">
+          
+          <div class="card" style="grid-column: span 4;">
+            <div class="card-body flex flex-col items-center text-center">
+              <div class="relative mb-4">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=3B82F6&color=fff&size=128" alt="Profile" class="avatar" style="width: 120px; height: 120px;">
+                <button class="btn-icon bg-brand text-white absolute bottom-0 right-0 shadow-md hover:bg-brand-dark" style="border-radius: 50%;"><i class="ph ph-camera"></i></button>
+              </div>
+              <h2 class="text-xl font-bold mb-1" id="p-display-name">Admin User</h2>
+              <p class="text-secondary mb-4">Store Manager</p>
+              
+              <div class="w-full border-t pt-4 text-left">
+                <div class="flex items-center gap-2 mb-2 text-sm text-secondary">
+                  <i class="ph ph-envelope text-lg"></i>
+                  <span id="p-display-email">admin@premiumdairy.com</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-secondary">
+                  <i class="ph ph-map-pin text-lg"></i>
+                  <span>Mumbai, India</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" style="grid-column: span 8;">
+            <div class="card-header">
+              <h3 class="card-title">Edit Profile</h3>
+            </div>
+            <div class="card-body">
+              <form id="profile-form">
+                <div class="flex gap-4 mb-4">
+                  <div class="form-group flex-1 m-0">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="p-name" class="form-control">
+                  </div>
+                  <div class="form-group flex-1 m-0">
+                    <label class="form-label">Role</label>
+                    <input type="text" id="p-role" class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group mb-6">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" id="p-email" class="form-control">
+                </div>
+                
+                <hr class="border-t my-6">
+                
+                <h4 class="font-bold mb-4">Security</h4>
+                <div class="form-group">
+                  <label class="form-label">Current Password</label>
+                  <input type="password" class="form-control" placeholder="••••••••">
+                </div>
+                <div class="flex gap-4 mb-6">
+                  <div class="form-group flex-1 m-0">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" placeholder="Leave blank to keep same">
+                  </div>
+                  <div class="form-group flex-1 m-0">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" placeholder="Leave blank to keep same">
+                  </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary ripple"><i class="ph ph-floppy-disk"></i> Save Profile</button>
+              </form>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const user = Storage.getUser();
+        document.getElementById('p-name').value = user.name;
+        document.getElementById('p-email').value = user.email;
+        document.getElementById('p-role').value = user.role;
+        document.getElementById('p-display-name').textContent = user.name;
+        document.getElementById('p-display-email').textContent = user.email;
+      }, 50);
+      
+      document.getElementById('profile-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Saving...';
+        
+        const newName = document.getElementById('p-name').value;
+        const newEmail = document.getElementById('p-email').value;
+        
+        Storage.updateUser({
+          name: newName,
+          email: newEmail,
+          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(newName)}&background=3B82F6&color=fff`
+        });
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          Utils.showToast('Profile Updated', 'Your profile details have been saved.', 'success');
+          
+          document.getElementById('p-display-name').textContent = newName;
+          document.getElementById('p-display-email').textContent = newEmail;
+          
+          // Re-render navbar to update avatar
+          App.renderLayout();
+          App.setupEventListeners();
+          App.updateNotificationsBadge();
+        }, 800);
+      });
+    });
+  </script>
+</body>
+</html>

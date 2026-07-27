@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Analytics</span>
+            </div>
+            <h1 class="text-h2">Business Analytics</h1>
+          </div>
+          <div class="page-actions">
+            <div class="search-container">
+              <select class="form-control" style="width: 200px;">
+                <option>Last 30 Days</option>
+                <option>This Quarter</option>
+                <option>This Year</option>
+              </select>
+            </div>
+            <button class="btn btn-brand ripple"><i class="ph ph-file-pdf"></i> Export Report</button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          
+          <div class="card" style="grid-column: span 12;">
+            <div class="card-header">
+              <h3 class="card-title">Revenue vs Profit Margin</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height: 350px;">
+                <canvas id="mainAnalyticsChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 6;">
+            <div class="card-header">
+              <h3 class="card-title">Sales by Category</h3>
+            </div>
+            <div class="card-body flex justify-center items-center">
+              <div class="chart-container" style="height: 300px; width: 100%;">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 6;">
+            <div class="card-header">
+              <h3 class="card-title">Customer Retention</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height: 300px; width: 100%;">
+                <canvas id="retentionChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        // Main Chart (Combo Line & Bar)
+        const ctxMain = document.getElementById('mainAnalyticsChart').getContext('2d');
+        const theme = Charts.getThemeColors();
+        new Chart(ctxMain, {
+          type: 'bar',
+          data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [
+              {
+                type: 'line',
+                label: 'Profit Margin (%)',
+                data: [35, 38, 32, 41],
+                borderColor: theme.warning,
+                borderWidth: 3,
+                tension: 0.4,
+                yAxisID: 'y1'
+              },
+              {
+                type: 'bar',
+                label: 'Revenue',
+                data: [45000, 52000, 48000, 61000],
+                backgroundColor: theme.brand,
+                borderRadius: 4,
+                yAxisID: 'y'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { type: 'linear', display: true, position: 'left' },
+              y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+
+        // Category Doughnut
+        Charts.renderDoughnutChart('categoryChart', 
+          ['Milk', 'Butter', 'Cheese', 'Yogurt'], 
+          [45, 25, 20, 10]
+        );
+
+        // Retention Line
+        Charts.renderLineChart('retentionChart', 
+          ['Jan', 'Feb', 'Mar', 'Apr', 'May'], 
+          [82, 85, 84, 88, 92], 
+          'Retention Rate (%)', 
+          'success'
+        );
+      }, 100);
+    });
+  </script>
+</body>
+</html>

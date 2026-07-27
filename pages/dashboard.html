@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Premium Dairy SaaS</title>
+  
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS Architecture -->
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/tables.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <!-- Sidebar Injected Here -->
+    <div id="sidebar-container"></div>
+
+    <main class="main-wrapper">
+      <!-- Navbar Injected Here -->
+      <div id="navbar-container"></div>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="#">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Dashboard</span>
+            </div>
+            <h1 class="text-h2">Dashboard Overview</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline"><i class="ph ph-download-simple text-lg"></i> Export Report</button>
+            <a href="new-sale.html" class="btn btn-brand ripple"><i class="ph ph-plus text-lg"></i> New Sale</a>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+          
+          <!-- Stat Cards -->
+          <div class="card stat-card stagger-1" style="animation: slideUp 0.4s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="stat-header">
+              <div class="stat-info">
+                <span class="stat-label">Today's Revenue</span>
+                <h3 class="stat-value" id="dash-today-rev">₹0</h3>
+              </div>
+              <div class="stat-icon success"><i class="ph ph-currency-inr"></i></div>
+            </div>
+            <div class="stat-trend up"><i class="ph ph-trend-up"></i> +12.5% from yesterday</div>
+          </div>
+
+          <div class="card stat-card stagger-2" style="animation: slideUp 0.4s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="stat-header">
+              <div class="stat-info">
+                <span class="stat-label">Today's Orders</span>
+                <h3 class="stat-value" id="dash-today-ord">0</h3>
+              </div>
+              <div class="stat-icon brand"><i class="ph ph-shopping-bag"></i></div>
+            </div>
+            <div class="stat-trend up"><i class="ph ph-trend-up"></i> +8.2% from yesterday</div>
+          </div>
+
+          <div class="card stat-card stagger-3" style="animation: slideUp 0.4s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="stat-header">
+              <div class="stat-info">
+                <span class="stat-label">Total Revenue</span>
+                <h3 class="stat-value" id="dash-total-rev">₹0</h3>
+              </div>
+              <div class="stat-icon primary"><i class="ph ph-wallet"></i></div>
+            </div>
+            <div class="stat-trend up"><i class="ph ph-trend-up"></i> +15.4% this month</div>
+          </div>
+
+          <div class="card stat-card stagger-4" style="animation: slideUp 0.4s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="stat-header">
+              <div class="stat-info">
+                <span class="stat-label">Total Orders</span>
+                <h3 class="stat-value" id="dash-total-ord">0</h3>
+              </div>
+              <div class="stat-icon warning"><i class="ph ph-receipt"></i></div>
+            </div>
+            <div class="stat-trend neutral"><i class="ph ph-minus"></i> Steady</div>
+          </div>
+
+          <!-- Charts -->
+          <div class="card chart-card stagger-1" style="animation: slideUp 0.5s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="card-header">
+              <h3 class="card-title">Revenue Trends</h3>
+              <select class="form-control" style="width: auto; padding-block: 0.25rem;">
+                <option>This Week</option>
+                <option>This Month</option>
+                <option>This Year</option>
+              </select>
+            </div>
+            <div class="card-body flex-1 flex-col">
+              <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card list-card stagger-2" style="animation: slideUp 0.5s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="card-header">
+              <h3 class="card-title">Top Products</h3>
+              <button class="btn-icon"><i class="ph ph-dots-three text-lg"></i></button>
+            </div>
+            <div class="card-body p-0">
+              <div class="item-list" id="top-products-list" style="padding: 0 1.5rem;">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+            <div class="card-footer text-center" style="padding: 1rem;">
+              <a href="products.html" class="text-brand font-medium text-sm hover:underline">View All Products</a>
+            </div>
+          </div>
+
+          <!-- Tables -->
+          <div class="card full-width-card stagger-3" style="animation: slideUp 0.6s ease-out forwards; opacity:0; transform:translateY(10px)">
+            <div class="card-header">
+              <h3 class="card-title">Recent Orders</h3>
+              <a href="sales.html" class="btn btn-outline btn-sm">View All</a>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Customer</th>
+                    <th>Date & Time</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-orders-tbody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div> <!-- /grid -->
+      </div> <!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

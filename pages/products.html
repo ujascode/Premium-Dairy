@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/tables.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Products</span>
+            </div>
+            <h1 class="text-h2">Products Management</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline" id="export-btn"><i class="ph ph-download-simple"></i> Export</button>
+            <a href="add-product.html" class="btn btn-primary ripple"><i class="ph ph-plus"></i> Add Product</a>
+          </div>
+        </div>
+
+        <div class="card full-width-card animate-slide-up">
+          <div class="card-header flex-wrap gap-4">
+            <div class="search-container" style="width: 300px;">
+              <i class="ph ph-magnifying-glass input-icon text-lg" style="left: 1rem"></i>
+              <input type="text" class="search-input" id="search-products" placeholder="Search by name or SKU...">
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <select class="form-control" id="filter-category" style="width: 150px;">
+                <option value="all">All Categories</option>
+                <!-- Injected via JS -->
+              </select>
+              <select class="form-control" id="filter-status" style="width: 150px;">
+                <option value="all">All Status</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table" id="products-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Cost</th>
+                  <th>Stock</th>
+                  <th>Status</th>
+                  <th>Added</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination-wrapper">
+            <div class="pagination-info">Showing <span id="page-start">1</span> to <span id="page-end">10</span> of <span id="total-items">0</span> products</div>
+            <div class="pagination">
+              <button class="page-item disabled"><i class="ph ph-caret-left"></i></button>
+              <button class="page-item active">1</button>
+              <button class="page-item">2</button>
+              <button class="page-item"><i class="ph ph-caret-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Product</h3>
+        <button class="modal-close btn-icon" onclick="closeModal('delete-modal')"><i class="ph ph-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="delete-product-name">this product</strong>? This action cannot be undone.</p>
+        <input type="hidden" id="delete-product-id">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('delete-modal')">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">Delete Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/products.js"></script>
+</body>
+</html>

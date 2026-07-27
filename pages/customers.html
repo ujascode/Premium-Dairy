@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/tables.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Customers</span>
+            </div>
+            <h1 class="text-h2">Customers</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline" id="export-btn"><i class="ph ph-download-simple"></i> Export</button>
+            <button class="btn btn-brand ripple" onclick="document.getElementById('add-customer-modal').classList.add('active')"><i class="ph ph-plus"></i> Add Customer</button>
+          </div>
+        </div>
+
+        <div class="card full-width-card animate-slide-up">
+          <div class="card-header">
+            <div class="search-container" style="width: 350px;">
+              <i class="ph ph-magnifying-glass input-icon text-lg" style="left: 1rem"></i>
+              <input type="text" class="search-input" id="search-customers" placeholder="Search customers by name, email, or phone...">
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table" id="customers-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Contact Info</th>
+                  <th>Total Purchases</th>
+                  <th>Last Order</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customers-tbody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Customer Modal -->
+  <div class="modal-overlay" id="add-customer-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Customer</h3>
+        <button class="modal-close btn-icon" onclick="document.getElementById('add-customer-modal').classList.remove('active')"><i class="ph ph-x"></i></button>
+      </div>
+      <form id="add-customer-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name <span class="required">*</span></label>
+            <input type="text" id="c-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address <span class="required">*</span></label>
+            <div class="input-icon-wrapper">
+              <i class="ph ph-envelope input-icon"></i>
+              <input type="email" id="c-email" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number <span class="required">*</span></label>
+            <div class="input-icon-wrapper">
+              <i class="ph ph-phone input-icon"></i>
+              <input type="tel" id="c-phone" class="form-control" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('add-customer-modal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Customer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/customers.js"></script>
+</body>
+</html>

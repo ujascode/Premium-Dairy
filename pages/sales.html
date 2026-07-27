@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales | Premium Dairy SaaS</title>
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+  <link rel="stylesheet" href="../assets/css/tables.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body class="animate-fade-in">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+    <main class="main-wrapper">
+      <div id="navbar-container"></div>
+
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">
+            <div class="breadcrumb">
+              <a href="dashboard.html">Home</a> <span class="breadcrumb-separator">/</span> <span class="breadcrumb-current">Sales</span>
+            </div>
+            <h1 class="text-h2">Sales History</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline" id="export-btn"><i class="ph ph-download-simple"></i> Export CSV</button>
+            <a href="new-sale.html" class="btn btn-brand ripple"><i class="ph ph-plus"></i> Create Invoice</a>
+          </div>
+        </div>
+
+        <div class="card full-width-card animate-slide-up">
+          <div class="card-header flex-wrap gap-4">
+            <div class="search-container" style="width: 300px;">
+              <i class="ph ph-magnifying-glass input-icon text-lg" style="left: 1rem"></i>
+              <input type="text" class="search-input" id="search-sales" placeholder="Search by Invoice ID or Customer...">
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <select class="form-control" id="filter-date" style="width: 150px;">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+              <select class="form-control" id="filter-status" style="width: 150px;">
+                <option value="all">All Status</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table" id="sales-table">
+              <thead>
+                <tr>
+                  <th>Invoice ID</th>
+                  <th>Customer</th>
+                  <th>Date & Time</th>
+                  <th>Payment Method</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="sales-tbody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination-wrapper">
+            <div class="pagination-info">Showing <span id="page-start">1</span> to <span id="page-end">10</span> of <span id="total-items">0</span> invoices</div>
+            <div class="pagination">
+              <button class="page-item disabled"><i class="ph ph-caret-left"></i></button>
+              <button class="page-item active">1</button>
+              <button class="page-item">2</button>
+              <button class="page-item"><i class="ph ph-caret-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/sales.js"></script>
+</body>
+</html>
