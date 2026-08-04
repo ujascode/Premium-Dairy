@@ -152,7 +152,7 @@ const defaultData = {
     {
       id: "INV-1001",
       customerId: "C001",
-      customerName: "John Doe",
+      customerName: "Ujas Patel",
       date: "2026-07-28T10:30:00Z",
       items: [{ productId: "P001", qty: 2, price: 65 }],
       subtotal: 130,
@@ -164,7 +164,7 @@ const defaultData = {
     {
       id: "INV-1002",
       customerId: "C003",
-      customerName: "Cafe Mocha",
+      customerName: "Raj Desai",
       date: "2026-07-28T11:15:00Z",
       items: [{ productId: "P007", qty: 5, price: 320 }],
       subtotal: 1600,
@@ -176,7 +176,7 @@ const defaultData = {
     {
       id: "INV-1003",
       customerId: "C002",
-      customerName: "Sarah Smith",
+      customerName: "Subh Patel",
       date: "2026-07-28T14:20:00Z",
       items: [{ productId: "P004", qty: 1, price: 450 }],
       subtotal: 450,
